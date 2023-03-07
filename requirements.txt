@@ -1,0 +1,23 @@
+-f https://download.pytorch.org/whl/cu113/torch_stable.html
+torch==1.10.2+cu113 
+-f https://download.pytorch.org/whl/cu113/torch_stable.html
+torchvision==0.11.3+cu113 
+-f https://download.pytorch.org/whl/cu113/torch_stable.html
+torchaudio===0.10.2+cu113 
+attrdict
+wandb
+tqdm
+einops
+lightning-bolts
+torchsummary
+pyyaml
+torchmetrics
+logzero
+dgl-cu113 dglgo -f https://data.dgl.ai/wheels/repo.html
+matplotlib
+imageio
+opencv-python
+h5py
+scikit-image
+pycocotools
+logzero
