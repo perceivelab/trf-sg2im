@@ -2,7 +2,7 @@
 <div align="center">    
  
 # Transformer-Based Scene Graph to Image
-[Renato Sortino](https://github.com/rensortino), [Simone Palazzo](https://github.com/simopal6) and Concetto Spampinato
+[Renato Sortino](https://github.com/rensortino), [Simone Palazzo](https://github.com/simopal6), and [Concetto Spampinato](https://github.com/cspampin)
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2303.04634-B31B1B.svg)](https://arxiv.org/abs/2303.04634)
 
