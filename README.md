@@ -31,3 +31,20 @@ Official PyTorch implementation of the paper __"[Transformer-Based Image Generat
 
 #### Analysis on the robustness of the model to input perturbations
 <div align=center><img width="700" alt="image" src="images/alterations.png"></div>
+
+<br/>
+
+## Citation
+```
+@article{SORTINO2023103721,
+  title = {Transformer-based image generation from scene graphs},
+  journal = {Computer Vision and Image Understanding},
+  pages = {103721},
+  year = {2023},
+  issn = {1077-3142},
+  doi = {https://doi.org/10.1016/j.cviu.2023.103721},
+  url = {https://www.sciencedirect.com/science/article/pii/S1077314223001017},
+  author = {Renato Sortino and Simone Palazzo and Francesco Rundo and Concetto Spampinato},
+  keywords = {Scene graphs, Transformers, Generative models, Conditional image generation},
+}
+```
