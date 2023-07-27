@@ -1,0 +1,32 @@
+datamodule:
+    target: data_modules.coco.COCODataModule
+    params: 
+        graph_data: true
+        image_size: 256
+        mask_size: 16
+        data_dir: data/coco
+        normalize_images: true
+        pos_enc_dim: 32
+
+trainer:
+    target: trainers.t_sgpt.TrainerSGPT
+    params:
+        base_lr: 0.0001 # 1e-4
+        scheduler: onecycle
+        box_beta: 10
+        image_size: 256
+        lr_scheduler: 
+            max_lr: 0.0003 # 3e-4
+
+        sgtransformer_config: config/sgtransformer.yaml
+        vqvae_config: config/vqmodel.yaml
+        img_transformer_config: config/img_transformer.yaml
+
+        emb_size: 1056
+        top_k_logits: 100
+        n_heads: 12
+        n_dec_layers: 8
+        sampling_method: multinomial
+        attn_type: conv
+        device: cuda
+        epochs: 300
