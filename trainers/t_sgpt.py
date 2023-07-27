@@ -54,7 +54,7 @@ class TrainerSGPT(TrainerBase):
         self.box_beta = kwargs.pop('box_beta', 10)
         self.top_k_logits = kwargs.pop('top_k_logits', 50)
         self.gt_layout = kwargs.pop('use_gt_layout', False)
-        self.top_k = kwargs.pop('top_k', 100)
+        self.top_k = kwargs.pop('top_k_logits', 100)
         self.logger.info(
             f'Using {"GT" if self.gt_layout else "predicted"} layout')
 
