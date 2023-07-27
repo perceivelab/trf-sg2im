@@ -93,7 +93,6 @@ class VectorQuantizer(nn.Module):
 
     def get_codebook_entry(self, indices, shape):
         # shape specifying (batch, height, width, channel)
-        # TODO: check for more easy handling with nn.Embedding
         min_encodings = torch.zeros(indices.shape[0], self.n_e).to(indices)
         min_encodings.scatter_(1, indices[:, None], 1)
 

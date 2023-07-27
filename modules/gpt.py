@@ -230,7 +230,7 @@ class CausalSelfAttention(nn.Module):
 
         # output projection
         y = self.resid_drop(self.proj(y))
-        return y, present   # TODO: check that this does not break anything
+        return y, present
 
 
 class MaskedCausalSelfAttention(nn.Module):
