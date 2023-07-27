@@ -34,10 +34,24 @@ For preparing COCO and VG, use the scripts under the `scripts` folder. For more 
 
 For pre-processing CLEVR, we used the procedure followed by [Canonical SG2IM](https://github.com/roeiherz/CanonicalSg2Im)
 
+### Train VQVAE 
+
+Refer to the [Taming Transformers repo](https://github.com/CompVis/taming-transformers) for training the VQVAE.
 ### Train SGTransformer on COCO
+
+Run `main.py` specifying the configuration file and other optional parameters.
 
 ```bash
 python main.py --config config/sgtransformer_coco.yaml --batch_size 128
+```
+
+### Train SGPT on COCO
+
+Same as before, just specify the configuration file in the command line. The specification of the model parameters, checkpoint paths, and dataset options are defined in the configuration file.
+
+
+```bash
+python main.py --config config/sgpt_coco.yaml 
 ```
 
 ## Results
