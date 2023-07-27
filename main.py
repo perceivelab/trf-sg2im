@@ -1,12 +1,11 @@
+import wandb
 import yaml
 from attrdict import AttrDict
 from omegaconf import OmegaConf
 
-import wandb
 from utils.arg_parser import get_args_parser, setup
 from utils.logging import Logger
-from utils.misc import (count_parameters, instantiate_from_config,
-                        fix_seed)
+from utils.misc import count_parameters, fix_seed, instantiate_from_config
 
 
 def main(args):
@@ -45,26 +44,29 @@ def main(args):
     tparams['val_loader'] = val_loader
     tparams['log_every'] = args.log_every_n_epochs
     tparams['save_every'] = args.save_every_n_epochs
+    tparams['use_gt_layout'] = args.use_gt_layout
 
-    if args.use_gt_layout:
-        tconf['target'] = 'trainers.t_sgpt_gt_layout.TrainerSGPT'
     trainer = instantiate_from_config(tconf)
 
     print('*'*70)
     logger.info(f'Debugging mode: {args.debug}')
     logger.info(f'Logging model information')
-    logger.info(f'SGTransformer type: {trainer.sgtrf.__class__.__name__ if hasattr(trainer, "sgtrf") else None}')
+    logger.info(
+        f'SGTransformer type: {trainer.sgtrf.__class__.__name__ if hasattr(trainer, "sgtrf") else None}')
     logger.info(
         f'SGTransformer total parameters {(count_parameters(trainer.sgtrf) / 1e6 if hasattr(trainer, "sgtrf") else 0):.2f}M')
-    logger.info(f'VQVAE type: {trainer.vqvae.__class__.__name__ if hasattr(trainer, "vqvae") else None}')
+    logger.info(
+        f'VQVAE type: {trainer.vqvae.__class__.__name__ if hasattr(trainer, "vqvae") else None}')
     logger.info(
         f'VQVAE total parameters {(count_parameters(trainer.vqvae) / 1e6 if hasattr(trainer, "vqvae") else 0):.2f}M')
-    logger.info(f'Image Transformer type: {trainer.img_trf.__class__.__name__ if hasattr(trainer, "img_trf") else None}')
+    logger.info(
+        f'Image Transformer type: {trainer.img_trf.__class__.__name__ if hasattr(trainer, "img_trf") else None}')
     logger.info(
         f'Image Transformer total parameters {(count_parameters(trainer.img_trf) / 1e6 if hasattr(trainer, "img_trf") else 0):.2f}M')
     print('*'*70)
 
     trainer.train()
+
 
 if __name__ == '__main__':
 
