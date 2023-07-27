@@ -2,9 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange
+
 from trainers.t_base import _init_weights
 from utils.layers import build_mlp
-from utils.model import MultiHeadAttentionLayer
+from utils.sgtransformer import MultiHeadAttentionLayer
 
 
 def get_lap_pos_enc(graph):
@@ -217,6 +218,5 @@ class GraphTransformerNet(nn.Module):
         return boxes, logits
 
     def loss(self, scores, targets):
-        # loss = nn.MSELoss()(scores,targets)
         loss = nn.L1Loss()(scores, targets)
         return loss

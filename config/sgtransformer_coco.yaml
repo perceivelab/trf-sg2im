@@ -1,0 +1,23 @@
+datamodule:
+    target: data_modules.coco.COCODataModule
+    params: 
+        graph_data: true
+        image_size: 256
+        mask_size: 16
+        data_dir: data/coco
+        normalize_images: true
+        pos_enc_dim: 32
+
+trainer:
+    target: trainers.t_sgtransformer.TrainerSGTransformer
+    params:
+        base_lr: 0.000003 # 3e-6
+        scheduler: onecycle
+        # device: cpu
+        lr_scheduler: 
+            max_lr: 0.00002 # 2e-5
+
+        sgtransformer_config: config/sgtransformer.yaml
+        device: cuda
+        epochs: 300
+        box_beta: 10
