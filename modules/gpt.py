@@ -24,7 +24,7 @@ class GPT1Config(GPTConfig):
     """ GPT-1 like network roughly 125M params """
     n_layer = 12
     n_head = 12
-    n_embd = 768
+    emb_size = 768
 
 
 class Sequential(nn.Sequential):
@@ -41,14 +41,14 @@ class Block(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        self.ln1 = nn.LayerNorm(config.n_embd)
-        self.ln2 = nn.LayerNorm(config.n_embd)
+        self.ln1 = nn.LayerNorm(config.emb_size)
+        self.ln2 = nn.LayerNorm(config.emb_size)
         self.attn = CausalSelfAttention(config)
-        # self.attn = nn.MultiheadAttention(config.n_embd, config.n_head, dropout=config.attn_pdrop)
+        # self.attn = nn.MultiheadAttention(config.emb_size, config.n_head, dropout=config.attn_pdrop)
         self.mlp = nn.Sequential(
-            nn.Linear(config.n_embd, 4 * config.n_embd),
+            nn.Linear(config.emb_size, 4 * config.emb_size),
             nn.GELU(),  # nice
-            nn.Linear(4 * config.n_embd, config.n_embd),
+            nn.Linear(4 * config.emb_size, config.emb_size),
             nn.Dropout(config.resid_pdrop),
         )
 
@@ -68,25 +68,25 @@ class Block(nn.Module):
 class GPT(nn.Module):
     """  the full GPT language model, with a context size of block_size """
 
-    def __init__(self, vocab_size, block_size, n_layer=12, n_head=8, n_embd=256,
+    def __init__(self, vocab_size, block_size, n_layer=12, n_head=8, emb_size=256,
                  embd_pdrop=0.1, resid_pdrop=0.1, attn_pdrop=0.1, n_unmasked=0):
         super().__init__()
         config = GPTConfig(vocab_size=vocab_size, block_size=block_size,
                            embd_pdrop=embd_pdrop, resid_pdrop=resid_pdrop, attn_pdrop=attn_pdrop,
-                           n_layer=n_layer, n_head=n_head, n_embd=n_embd,
+                           n_layer=n_layer, n_head=n_head, emb_size=emb_size,
                            n_unmasked=n_unmasked)
         # input embedding stem
-        # self.tok_emb = nn.Embedding(config.vocab_size + 1, config.n_embd)
-        self.tok_emb = nn.Embedding(config.vocab_size, config.n_embd)
+        # self.tok_emb = nn.Embedding(config.vocab_size + 1, config.emb_size)
+        self.tok_emb = nn.Embedding(config.vocab_size, config.emb_size)
         self.pos_emb = nn.Parameter(torch.zeros(
-            1, config.block_size, config.n_embd))
+            1, config.block_size, config.emb_size))
         self.drop = nn.Dropout(config.embd_pdrop)
         # transformer
         self.blocks = Sequential(*[Block(config)
                                  for _ in range(config.n_layer)])
         # decoder head
-        self.ln_f = nn.LayerNorm(config.n_embd)
-        self.head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
+        self.ln_f = nn.LayerNorm(config.emb_size)
+        self.head = nn.Linear(config.emb_size, config.vocab_size, bias=False)
         self.block_size = config.block_size
         self.apply(self._init_weights)
         self.config = config
@@ -145,7 +145,7 @@ class GPT(nn.Module):
             past = torch.cat(past, dim=-2)
             past_shape = list(past.shape)
             expected_shape = [self.config.n_layer, 2, token_embeddings.shape[0],
-                              self.config.n_head, past_length, self.config.n_embd//self.config.n_head]
+                              self.config.n_head, past_length, self.config.emb_size//self.config.n_head]
             assert past_shape == expected_shape, f"{past_shape} =/= {expected_shape}"
             # each position maps to a (learnable) vector
             position_embeddings = self.pos_emb[:, past_length, :]
@@ -181,16 +181,16 @@ class CausalSelfAttention(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        assert config.n_embd % config.n_head == 0
+        assert config.emb_size % config.n_head == 0
         # key, query, value projections for all heads
-        self.key = nn.Linear(config.n_embd, config.n_embd)
-        self.query = nn.Linear(config.n_embd, config.n_embd)
-        self.value = nn.Linear(config.n_embd, config.n_embd)
+        self.key = nn.Linear(config.emb_size, config.emb_size)
+        self.query = nn.Linear(config.emb_size, config.emb_size)
+        self.value = nn.Linear(config.emb_size, config.emb_size)
         # regularization
         self.attn_drop = nn.Dropout(config.attn_pdrop)
         self.resid_drop = nn.Dropout(config.resid_pdrop)
         # output projection
-        self.proj = nn.Linear(config.n_embd, config.n_embd)
+        self.proj = nn.Linear(config.emb_size, config.emb_size)
         # causal mask to ensure that attention is only applied to the left in the input sequence
         mask = torch.tril(torch.ones(config.block_size,
                                      config.block_size))
@@ -242,16 +242,16 @@ class MaskedCausalSelfAttention(nn.Module):
 
     def __init__(self, config):
         super().__init__()
-        assert config.n_embd % config.n_head == 0
+        assert config.emb_size % config.n_head == 0
         # key, query, value projections for all heads
-        self.key = nn.Linear(config.n_embd, config.n_embd)
-        self.query = nn.Linear(config.n_embd, config.n_embd)
-        self.value = nn.Linear(config.n_embd, config.n_embd)
+        self.key = nn.Linear(config.emb_size, config.emb_size)
+        self.query = nn.Linear(config.emb_size, config.emb_size)
+        self.value = nn.Linear(config.emb_size, config.emb_size)
         # regularization
         self.attn_drop = nn.Dropout(config.attn_pdrop)
         self.resid_drop = nn.Dropout(config.resid_pdrop)
         # output projection
-        self.proj = nn.Linear(config.n_embd, config.n_embd)
+        self.proj = nn.Linear(config.emb_size, config.emb_size)
         # causal mask to ensure that attention is only applied to the left in the input sequence
         mask = torch.tril(torch.ones(config.block_size,
                                      config.block_size))

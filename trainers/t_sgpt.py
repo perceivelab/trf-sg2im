@@ -27,18 +27,17 @@ class TrainerSGPT(TrainerBase):
 
         vqvae_config = OmegaConf.load(kwargs.pop('vqvae_config'))
         self.vqvae = instantiate_from_config(vqvae_config).to(kwargs['device'])
-        self.codebook_size = vqvae_config.params.n_embed
+        self.codebook_size = vqvae_config.params.emb_size
 
         img_trf_config = OmegaConf.load(kwargs.pop('img_transformer_config'))
 
-        assert img_trf_config.params.n_embd % img_trf_config.params.n_head == 0, "Embedding size not divisible by number of heads"
+        assert img_trf_config.params.emb_size % img_trf_config.params.n_head == 0, "Embedding size not divisible by number of heads"
 
         self.img_trf = instantiate_from_config(
             img_trf_config).to(kwargs['device'])
 
-        # TODO Rename n_emb to emb size
-        assert img_trf_config.params['vocab_size'] == vqvae_config.params['n_embed'],  \
-            f"Vocab size must be equal for VQVAE ({vqvae_config.params['n_embed']}) and Transformer {img_trf_config.params['vocab_size']} must have the same embedding size"
+        assert img_trf_config.params['vocab_size'] == vqvae_config.params['emb_size'],  \
+            f"Vocab size must be equal for VQVAE ({vqvae_config.params['emb_size']}) and Transformer {img_trf_config.params['vocab_size']} must have the same embedding size"
 
         for p in self.vqvae.parameters():
             p.requires_grad = False

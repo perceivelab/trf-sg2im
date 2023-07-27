@@ -2,7 +2,7 @@ target: modules.vqvae.vqgan.VQModel
 params:
     ckpt_path: weights/vqmodel/K8192/coco.pt
     embed_dim: 256
-    n_embed: 8192
+    emb_size: 8192
     ddconfig:
         double_z: false
         z_channels: 256

@@ -11,7 +11,7 @@ from modules.vqvae.quantize import VectorQuantizer2 as VectorQuantizer
 class VQModel(nn.Module):
     def __init__(self,
                  ddconfig,
-                 n_embed=1024,
+                 emb_size=1024,
                  embed_dim=256,
                  ckpt_path=None,
                  ignore_keys=[],
@@ -26,7 +26,7 @@ class VQModel(nn.Module):
         self.encoder = Encoder(**ddconfig)
         self.decoder = Decoder(**ddconfig)
         # self.loss = instantiate_from_config(lossconfig)
-        self.quantize = VectorQuantizer(n_embed, embed_dim, beta=0.25,
+        self.quantize = VectorQuantizer(emb_size, embed_dim, beta=0.25,
                                         remap=remap, sane_index_shape=sane_index_shape)
         self.quant_conv = torch.nn.Conv2d(ddconfig["z_channels"], embed_dim, 1)
         self.post_quant_conv = torch.nn.Conv2d(

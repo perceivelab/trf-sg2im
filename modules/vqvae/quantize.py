@@ -116,20 +116,20 @@ class GumbelQuantize(nn.Module):
     https://arxiv.org/abs/1611.01144
     """
 
-    def __init__(self, num_hiddens, embedding_dim, n_embed, straight_through=True,
+    def __init__(self, num_hiddens, embedding_dim, emb_size, straight_through=True,
                  kl_weight=5e-4, temp_init=1.0, use_vqinterface=True,
                  remap=None, unknown_index="random"):
         super().__init__()
 
         self.embedding_dim = embedding_dim
-        self.n_embed = n_embed
+        self.emb_size = emb_size
 
         self.straight_through = straight_through
         self.temperature = temp_init
         self.kl_weight = kl_weight
 
-        self.proj = nn.Conv2d(num_hiddens, n_embed, 1)
-        self.embed = nn.Embedding(n_embed, embedding_dim)
+        self.proj = nn.Conv2d(num_hiddens, emb_size, 1)
+        self.embed = nn.Embedding(emb_size, embedding_dim)
 
         self.use_vqinterface = use_vqinterface
 
@@ -141,10 +141,10 @@ class GumbelQuantize(nn.Module):
             if self.unknown_index == "extra":
                 self.unknown_index = self.re_embed
                 self.re_embed = self.re_embed+1
-            print(f"Remapping {self.n_embed} indices to {self.re_embed} indices. "
+            print(f"Remapping {self.emb_size} indices to {self.re_embed} indices. "
                   f"Using {self.unknown_index} for unknown indices.")
         else:
-            self.re_embed = n_embed
+            self.re_embed = emb_size
 
     def remap_to_used(self, inds):
         ishape = inds.shape
@@ -193,7 +193,7 @@ class GumbelQuantize(nn.Module):
         # + kl divergence to the prior loss
         qy = F.softmax(logits, dim=1)
         diff = self.kl_weight * \
-            torch.sum(qy * torch.log(qy * self.n_embed + 1e-10), dim=1).mean()
+            torch.sum(qy * torch.log(qy * self.emb_size + 1e-10), dim=1).mean()
 
         ind = soft_one_hot.argmax(dim=1)
         if self.remap is not None:
@@ -210,7 +210,7 @@ class GumbelQuantize(nn.Module):
         indices = rearrange(indices, '(b h w) -> b h w', b=b, h=h, w=w)
         if self.remap is not None:
             indices = self.unmap_to_all(indices)
-        one_hot = F.one_hot(indices, num_classes=self.n_embed).permute(
+        one_hot = F.one_hot(indices, num_classes=self.emb_size).permute(
             0, 3, 1, 2).float()
         z_q = einsum('b n h w, n d -> b d h w', one_hot, self.embed.weight)
         return z_q
@@ -374,7 +374,7 @@ class EmbeddingEMA(nn.Module):
 
 
 class EMAVectorQuantizer(nn.Module):
-    def __init__(self, n_embed, embedding_dim, beta, decay=0.99, eps=1e-5,
+    def __init__(self, emb_size, embedding_dim, beta, decay=0.99, eps=1e-5,
                  remap=None, unknown_index="random"):
         super().__init__()
         self.codebook_dim = codebook_dim
@@ -391,10 +391,10 @@ class EMAVectorQuantizer(nn.Module):
             if self.unknown_index == "extra":
                 self.unknown_index = self.re_embed
                 self.re_embed = self.re_embed+1
-            print(f"Remapping {self.n_embed} indices to {self.re_embed} indices. "
+            print(f"Remapping {self.emb_size} indices to {self.re_embed} indices. "
                   f"Using {self.unknown_index} for unknown indices.")
         else:
-            self.re_embed = n_embed
+            self.re_embed = emb_size
 
     def remap_to_used(self, inds):
         ishape = inds.shape
