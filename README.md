@@ -23,6 +23,23 @@ Official PyTorch implementation of the paper __"[Transformer-Based Image Generat
 
 <br/>
 
+## Usage
+
+The core logic of the training is implemented in the `main.py` file. This instantiates the dataset and the trainer, reading the parameters from the command line and from config files. The essential parameter to pass is the YAML configuration file. 
+Modules are instantiated automatically from the configuration file.
+
+### Dataset preparation
+
+For preparing COCO and VG, use the scripts under the `scripts` folder. For more information, refer to the [sg2im repository](https://github.com/google/sg2im), since this part is taken from there.
+
+For pre-processing CLEVR, we used the procedure followed by [Canonical SG2IM](https://github.com/roeiherz/CanonicalSg2Im)
+
+### Train SGTransformer on COCO
+
+```bash
+python main.py --config config/sgtransformer_coco.yaml --batch_size 128
+```
+
 ## Results
 #### On COCO compared to SOTA models
 <div align=center><img width="700" alt="image" src="images/sota.png"></div>
