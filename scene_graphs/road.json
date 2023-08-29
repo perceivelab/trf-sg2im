@@ -1,0 +1,14 @@
+[
+  {
+    "objects": ["person", "building-other", "tree", "clouds", "road", "car", "roof"],
+    "relationships": [
+      [0, "right of", 2],
+      [0, "below", 3],
+      [0, "above", 4],
+      [1, "surrounding", 4],
+      [1, "surrounding", 5],
+      [2, "left of", 6],
+      [2, "left of", 6]
+    ]
+  }
+]

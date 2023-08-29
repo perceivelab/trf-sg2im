@@ -1,0 +1,13 @@
+[
+  {
+    "objects": ["sky-other", "mountain", "snow", "fence"],
+    "relationships": [
+      [0, "above", 3],
+      [0, "surrounding", 1],
+      [1, "above", 3],
+      [1, "surrounding", 2],
+      [2, "surrounding", 3],
+      [3, "below", 0]
+    ]
+  }
+]

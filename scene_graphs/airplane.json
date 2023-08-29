@@ -1,0 +1,12 @@
+[
+  {
+    "objects": ["clouds", "airplane", "road", "building-other", "grass"],
+    "relationships": [
+      [0, "above", 2],
+      [1, "inside", 0],
+      [3, "above", 2],
+      [3, "right of", 1],
+      [4, "below", 0]
+    ]
+  }
+]

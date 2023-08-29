@@ -1,0 +1,13 @@
+[
+  {
+    "objects": ["wall-panel", "playingfield", "person", "stairs", "person"],
+    "relationships": [
+      [0, "above", 1],
+      [1, "surrounding", 2],
+      [2, "left of", 4],
+      [4, "right of", 2],
+      [3, "above", 4],
+      [4, "below", 3]
+    ]
+  }
+]

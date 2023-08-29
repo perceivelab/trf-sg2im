@@ -1,0 +1,11 @@
+[
+  {
+    "objects": ["elephant", "elephant", "tree", "grass"],
+    "relationships": [
+      [0, "inside", 3],
+      [0, "left of", 1],
+      [1, "right of", 4],
+      [2, "surrounding", 1]
+    ]
+  }
+]

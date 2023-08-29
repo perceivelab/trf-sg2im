@@ -1,0 +1,12 @@
+[
+  {
+    "objects": ["person", "surfboard", "sky-other", "sea"],
+    "relationships": [
+      [0, "above", 1],
+      [0, "below", 2],
+      [1, "below", 2],
+      [0, "inside", 3],
+      [3, "surrounding", 1]
+    ]
+  }
+]

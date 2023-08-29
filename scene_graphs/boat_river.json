@@ -1,0 +1,13 @@
+[
+  {
+    "objects": ["clouds", "building-other", "boat", "tree", "river"],
+    "relationships": [
+      [0, "above", 1],
+      [0, "above", 2],
+      [2, "inside", 4],
+      [1, "above", 4],
+      [3, "right of", 4],
+      [4, "below", 0]
+    ]
+  }
+]
