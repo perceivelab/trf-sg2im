@@ -198,7 +198,8 @@ def main(args):
     out_dir = Path("inference_output")
     out_dir.mkdir(exist_ok=True, parents=True) 
 
-    scene_graphs_json = 'scene_graphs/coco.json'
+    scene_graphs_json = args.scene_graph
+    print(f"Generating from scene graph: {scene_graphs_json}")
 
     latent_size = get_hw(
             config.datamodule.params.image_size, vqvae_config.params.ddconfig.ch_mult)
@@ -244,7 +245,10 @@ def main(args):
     
 if __name__ == '__main__':
 
-    args = get_args_parser().parse_args()
+    parser = get_args_parser()
+    parser.add_argument('--scene-graph', default='scene_graphs/airplane.json',
+                        help='Path to scene graph JSON file')
+    args = parser.parse_args()
 
     with open(args.config, "r") as stream:
         conf = yaml.safe_load(stream)
