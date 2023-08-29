@@ -37,7 +37,7 @@ For pre-processing CLEVR, we used the procedure followed by [Canonical SG2IM](ht
 ## Inference
 To generate an image from a scene graph, use the `inference.py` script and provide a scene graph in JSON format. Then run the following command line
 ```
-python scripts/inference.py --config config/sgpt_coco.yaml --sgtrf_ckpt {SGTRANSFORMER_WEIGHTS} --img_trf_ckpt {IMG_TRF_WEIGHTS}
+python scripts/inference.py --config config/sgpt_coco.yaml --sgtrf_ckpt {SGTRANSFORMER_WEIGHTS} --img_trf_ckpt {IMG_TRF_WEIGHTS} --scene-graph {PATH_TO_SCENE_GRAPH}
 ``` 
 ## Training 
 
